@@ -1,10 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean,GUID
+from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.mssql import UNIQUEIDENTIFIER
+
+# Then, use `UNIQUEIDENTIFIER` as your column type
 
 
 import os
@@ -82,7 +85,7 @@ class Conversation(Base):
     LanguageID = Column(Integer, nullable=False)
     SelectedCompany = Column(String(512))
     GroupID = Column(Integer, ForeignKey('ChatGroups.GroupID'), nullable=False)
-    GUID = Column(GUID, nullable=False)
+    GUID = Column(UNIQUEIDENTIFIER, nullable=False)
     IsActive = Column(Boolean, nullable=False)
     
     # Relationships

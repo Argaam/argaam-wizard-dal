@@ -7,15 +7,15 @@ from typing import Type, Generic, TypeVar, List
 from .models import Base, User  # Ensure you import all your model classes here as needed
 from typing import Dict, Optional
 
-server = os.getenv('SQL_SERVER')
-database = os.getenv('SQL_DATABASE')
-username = os.getenv('SQL_USERNAME')
-password = os.getenv('SQL_PASSWORD')
-driver = 'ODBC Driver 17 for SQL Server'
-DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver={driver}"
+# server = os.getenv('SQL_SERVER')
+# database = os.getenv('SQL_DATABASE')
+# username = os.getenv('SQL_USERNAME')
+# password = os.getenv('SQL_PASSWORD')
+# driver = 'ODBC Driver 17 for SQL Server'
+# DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver={driver}"
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# engine = create_engine(DATABASE_URL)
+# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 T = TypeVar('T', bound=Base)
@@ -25,6 +25,14 @@ class BaseRepository(Generic[T]):
         self.model = model
 
     def get_session(self):
+        server = os.getenv('SQL_SERVER')
+        database = os.getenv('SQL_DATABASE')
+        username = os.getenv('SQL_USERNAME')
+        password = os.getenv('SQL_PASSWORD')
+        driver = 'ODBC Driver 17 for SQL Server'
+        DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver={driver}"
+
+        engine = create_engine(DATABASE_URL)
         return sessionmaker(autocommit=False, autoflush=False, bind=engine)
     
     def get_by_id(self, db_session: Session, id: int) -> T:

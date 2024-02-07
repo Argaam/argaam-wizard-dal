@@ -5,6 +5,7 @@ import os
 from sqlalchemy.orm import Session
 from typing import Type, Generic, TypeVar, List 
 from .models import Base, User  # Ensure you import all your model classes here as needed
+from typing import Dict, Optional
 
 server = os.getenv('SQL_SERVER')
 database = os.getenv('SQL_DATABASE')

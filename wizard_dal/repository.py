@@ -24,6 +24,9 @@ class BaseRepository(Generic[T]):
     def __init__(self, model: Type[T]):
         self.model = model
 
+    def get_session(self):
+        return sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    
     def get_by_id(self, db_session: Session, id: int) -> T:
         try:
             return db_session.query(self.model).filter(self.model.id == id).first()

@@ -9,7 +9,6 @@ from sqlalchemy.dialects.mssql import UNIQUEIDENTIFIER
 
 # Then, use `UNIQUEIDENTIFIER` as your column type
 
-
 import os
 
 server = os.getenv('SQL_SERVER')
@@ -17,7 +16,6 @@ database = os.getenv('SQL_DATABASE')
 username = os.getenv('SQL_USERNAME')
 password = os.getenv('SQL_PASSWORD')
 driver = 'ODBC Driver 17 for SQL Server'
-
 
 DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver={driver}"
 

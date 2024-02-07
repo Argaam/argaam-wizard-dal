@@ -10,4 +10,9 @@ setup(
         "SQLAlchemy",
         "pyodbc",
     ],
+    include_package_data=True,
+    author="Abdul Akbar Khan",
+    author_email="akbar.khan@argaam.com",
+    description="Data Access Layer for Argaam Wizard",
+    url="https://github.com/Argaam/argaam-wizard-dal",
 )

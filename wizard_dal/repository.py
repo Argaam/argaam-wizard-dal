@@ -86,3 +86,34 @@ class UserRepository(BaseRepository):
 
     def get_by_email(self, db_session: Session, email: str) -> User:
         return db_session.query(User).filter(User.EmailAddress == email).first()
+    
+    def create_user(self, db_session: Session, user_data: Dict) -> Optional[User]:
+        """
+        Creates a new User in the database.
+
+        :param db_session: The database session to use.
+        :param user_data: A dictionary containing the user data. Expected keys are
+                            'EmailAddress', 'DisplayName', and any other fields relevant to the User model.
+        :return: The newly created User instance, or None if the creation failed.
+        """
+        try:
+            # Ensure the email address is unique
+            existing_user = self.get_by_email(db_session, user_data['EmailAddress'])
+            if existing_user is not None:
+                print("A user with this email address already exists.")
+                return None
+
+            # Create a new User instance
+            new_user = User(
+                EmailAddress=user_data['EmailAddress'],
+                DisplayName=user_data.get('DisplayName', '')  # Use an empty string as default if not provided
+                # Add other fields as necessary
+            )
+            db_session.add(new_user)
+            db_session.commit()
+            db_session.refresh(new_user)
+            return new_user
+        except SQLAlchemyError as e:
+            db_session.rollback()
+            print(f"Error creating User: {e}")
+            return None

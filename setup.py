@@ -9,6 +9,7 @@ setup(
         # for example, SQLAlchemy, pyodbc, etc.
         "SQLAlchemy",
         "pyodbc",
+        'python-dotenv',
     ],
     include_package_data=True,
     author="Abdul Akbar Khan",

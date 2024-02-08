@@ -9,6 +9,7 @@ from sqlalchemy.dialects.mssql import UNIQUEIDENTIFIER
 
 # Then, use `UNIQUEIDENTIFIER` as your column type
 
+
 import os
 
 server = os.getenv('SQL_SERVER')

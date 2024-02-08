@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, Unicode, UnicodeText, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
@@ -96,11 +96,11 @@ class Company(Base):
     __tablename__ = 'companies'
 
     id = Column(String(255), primary_key=True)
-    full_name_ar = Column(String(255))
+    full_name_ar = Column(Unicode(255))
     full_name_en = Column(String(255))
-    name_ar = Column(String(255))
+    name_ar = Column(Unicode(255))
     name_en = Column(String(255))
-    logo_url = Column(String(255))
+    logo_url = Column(Unicode(255))
 
 
 class ConversationData(Base):

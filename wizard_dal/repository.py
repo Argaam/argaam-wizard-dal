@@ -134,26 +134,38 @@ class AgentRepository(BaseRepository):
     def get_by_name(self, db_session: Session, agent_name: str) -> Optional[Agent]:
         return db_session.query(Agent).filter(Agent.AgentName == agent_name).first()
     
-    def register_or_update_agent(self, db_session: Session, agent_data: Dict) -> Agent:
+    def register_or_update_agent(self, db_session: Session, agent_obj: Agent) -> Agent:
         """
-        Registers a new agent if not exists, or updates it based on provided dictionary.
+        Registers a new agent if not exists, or updates it based on the provided Agent object.
         
         :param db_session: The database session to use.
-        :param agent_data: A dictionary with agent's data.
+        :param agent_obj: An Agent object with the agent's data.
         :return: The registered or updated Agent instance.
         """
-        existing_agent = self.get_by_name(db_session, agent_data['AgentName'])
+        # Assuming AgentName is a unique identifier for the agent
+        existing_agent = self.get_by_name(db_session, agent_obj.AgentName)
         if existing_agent:
-            # Update existing agent with provided data
-            for key, value in agent_data.items():
-                setattr(existing_agent, key, value)
+            # Update existing agent with provided Agent object data
+            # You can list here all the attributes you want to update
+            existing_agent.AgentPath = agent_obj.AgentPath
+            existing_agent.AgentClassName = agent_obj.AgentClassName
+            existing_agent.Description = agent_obj.Description
+            existing_agent.IsActive = agent_obj.IsActive
+            existing_agent.RedisChannel = agent_obj.RedisChannel
+            existing_agent.Configurations = agent_obj.Configurations
+            existing_agent.ShowResponse = agent_obj.ShowResponse
+            existing_agent.ResponseOrder = agent_obj.ResponseOrder
+            existing_agent.TriggerOn = agent_obj.TriggerOn
+            existing_agent.OnError = agent_obj.OnError
+            existing_agent.OnSuccess = agent_obj.OnSuccess
+
             db_session.commit()
             db_session.refresh(existing_agent)
             return existing_agent
         else:
             # Register new agent
-            new_agent = Agent(**agent_data)
-            db_session.add(new_agent)
+            db_session.add(agent_obj)
             db_session.commit()
-            db_session.refresh(new_agent)
-            return new_agent
+            db_session.refresh(agent_obj)
+            return agent_obj
+

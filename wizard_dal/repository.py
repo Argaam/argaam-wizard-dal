@@ -147,20 +147,20 @@ class AgentRepository(BaseRepository):
         if existing_agent:
             # Update existing agent with provided Agent object data
             # You can list here all the attributes you want to update
-            existing_agent.AgentPath = agent_obj.AgentPath
-            existing_agent.AgentClassName = agent_obj.AgentClassName
-            existing_agent.Description = agent_obj.Description
-            existing_agent.IsActive = agent_obj.IsActive
-            existing_agent.RedisChannel = agent_obj.RedisChannel
-            existing_agent.Configurations = agent_obj.Configurations
-            existing_agent.ShowResponse = agent_obj.ShowResponse
-            existing_agent.ResponseOrder = agent_obj.ResponseOrder
-            existing_agent.TriggerOn = agent_obj.TriggerOn
-            existing_agent.OnError = agent_obj.OnError
-            existing_agent.OnSuccess = agent_obj.OnSuccess
+            # existing_agent.AgentPath = agent_obj.AgentPath
+            # existing_agent.AgentClassName = agent_obj.AgentClassName
+            # existing_agent.Description = agent_obj.Description
+            # existing_agent.IsActive = agent_obj.IsActive
+            # existing_agent.RedisChannel = agent_obj.RedisChannel
+            # existing_agent.Configurations = agent_obj.Configurations
+            # existing_agent.ShowResponse = agent_obj.ShowResponse
+            # existing_agent.ResponseOrder = agent_obj.ResponseOrder
+            # existing_agent.TriggerOn = agent_obj.TriggerOn
+            # existing_agent.OnError = agent_obj.OnError
+            # existing_agent.OnSuccess = agent_obj.OnSuccess
 
-            db_session.commit()
-            db_session.refresh(existing_agent)
+            # db_session.commit()
+            # db_session.refresh(existing_agent)
             return existing_agent
         else:
             # Register new agent

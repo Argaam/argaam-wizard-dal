@@ -126,3 +126,4 @@ class UserRepository(BaseRepository):
             db_session.rollback()
             print(f"Error creating User: {e}")
             return None
+

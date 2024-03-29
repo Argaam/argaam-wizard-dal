@@ -135,7 +135,7 @@ class AgentRepository(BaseRepository):
         super().__init__(Agent)
     
     def get_by_name(self, db_session: Session, agent_name: str) -> Optional[Agent]:
-        return db_session.query(Agent).options(joinedload(Agent.related_property)).filter(Agent.AgentName == agent_name).first()
+        return db_session.query(Agent).filter(Agent.AgentName == agent_name).first()
 
     def get_active_agents(self, db_session: Session) -> List[Agent]:
         """

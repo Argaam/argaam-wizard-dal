@@ -189,6 +189,8 @@ class AgentRepository(BaseRepository):
 
             # db_session.commit()
             # db_session.refresh(existing_agent)
+            db_session.commit()
+            db_session.refresh(existing_agent)  # Refresh to prevent DetachedInstanceError
             return existing_agent
         else:
             # Register new agent

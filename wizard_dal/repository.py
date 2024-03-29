@@ -134,6 +134,15 @@ class AgentRepository(BaseRepository):
     def get_by_name(self, db_session: Session, agent_name: str) -> Optional[Agent]:
         return db_session.query(Agent).filter(Agent.AgentName == agent_name).first()
     
+    def get_active_agents(self, db_session: Session) -> List[Agent]:
+        """
+        Retrieves all active agents from the database.
+        
+        :param db_session: The database session to use.
+        :return: A list of Agent objects that are active.
+        """
+        return db_session.query(self.model).filter(self.model.IsActive == True).all()
+    
     def register_or_update_agent(self, db_session: Session, agent_obj: Agent) -> Agent:
         """
         Registers a new agent if not exists, or updates it based on the provided Agent object.

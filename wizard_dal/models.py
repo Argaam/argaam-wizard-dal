@@ -40,6 +40,8 @@ class Agent(Base):
     TriggerOn = Column(String(2048))
     OnError = Column(String(2048))
     OnSuccess = Column(String(10))
+    Status = Column(String(256), nullable=True)
+    StatusChangedOn = Column(DateTime, nullable=True)
     
     # Relationships
     conversation_responses = relationship("ConversationResponse", back_populates="agent")

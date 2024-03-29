@@ -2,6 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
+
+from datetime import datetime
+
 import os
 from sqlalchemy.orm import Session
 from typing import Type, Generic, TypeVar, List 
@@ -142,7 +145,23 @@ class AgentRepository(BaseRepository):
         :return: A list of Agent objects that are active.
         """
         return db_session.query(self.model).filter(self.model.IsActive == True).all()
-    
+    def update_agent_status(self, db_session: Session, agent_id: int, new_status: str) -> Optional[Agent]:
+        """
+        Updates the status of an agent and the timestamp when the status was changed.
+        
+        :param db_session: The database session to use.
+        :param agent_id: The ID of the agent to update.
+        :param new_status: The new status to set.
+        :return: The updated Agent object, or None if not found.
+        """
+        agent = db_session.query(self.model).filter(self.model.AgentID == agent_id).first()
+        if agent:
+            agent.Status = new_status
+            agent.StatusChangedOn = datetime.now()  # Assuming you want to use UTC time
+            db_session.commit()
+            return agent
+        else:
+            return None
     def register_or_update_agent(self, db_session: Session, agent_obj: Agent) -> Agent:
         """
         Registers a new agent if not exists, or updates it based on the provided Agent object.

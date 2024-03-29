@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
 import os
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import Type, Generic, TypeVar, List 
 from .models import Base, User , Agent # Ensure you import all your model classes here as needed
 from typing import Dict, Optional
@@ -135,8 +135,8 @@ class AgentRepository(BaseRepository):
         super().__init__(Agent)
     
     def get_by_name(self, db_session: Session, agent_name: str) -> Optional[Agent]:
-        return db_session.query(Agent).filter(Agent.AgentName == agent_name).first()
-    
+        return db_session.query(Agent).options(joinedload(Agent.related_property)).filter(Agent.AgentName == agent_name).first()
+
     def get_active_agents(self, db_session: Session) -> List[Agent]:
         """
         Retrieves all active agents from the database.

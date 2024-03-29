@@ -23,7 +23,7 @@ DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver
 
 
 engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, expire_on_commit=False)
 
 
 T = TypeVar('T', bound=Base)

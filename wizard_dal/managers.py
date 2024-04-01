@@ -35,7 +35,11 @@ class AgentManager:
         agent_repository = AgentRepository()
         db_session = agent_repository.get_session()
         self.agent = agent_repository.update_agent_status(db_session, agent_id, status)
-
+        
+    def get_active_agents():
+        agent_repository = AgentRepository()
+        db_session = agent_repository.get_session()
+        return agent_repository.get_active_agents(db_session)
 
 class ConversationManager:
     def __init__(self):

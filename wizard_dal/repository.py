@@ -8,7 +8,7 @@ from datetime import datetime
 import os
 from sqlalchemy.orm import Session, joinedload
 from typing import Type, Generic, TypeVar, List 
-from .models import Base, User , Agent # Ensure you import all your model classes here as needed
+from .models import Base, User , Agent, Conversation, ConversationResponse # Ensure you import all your model classes here as needed
 from typing import Dict, Optional
 from dotenv import load_dotenv
 load_dotenv()
@@ -199,3 +199,56 @@ class AgentRepository(BaseRepository):
             db_session.refresh(agent_obj)
             return agent_obj
 
+class ConversationRepository(BaseRepository):
+    def __init__(self):
+        super().__init__(Conversation)
+    
+    def create_conversation(self, db_session: Session, conversation_data: Dict) -> Optional[Conversation]:
+        """
+        Creates a new Conversation object and stores it in the database.
+        """
+        try:
+            conversation = Conversation(**conversation_data, CreatedOn=datetime.now(), IsProcessed=False, IsActive=True)
+            db_session.add(conversation)
+            db_session.commit()
+            db_session.refresh(conversation)
+            return conversation
+        except SQLAlchemyError as e:
+            db_session.rollback()
+            print(f"Error creating Conversation: {e}")
+            return None
+    
+    def create_conversation_response(self, db_session: Session, response_data: Dict) -> Optional[ConversationResponse]:
+        """
+        Creates a new ConversationResponse object and associates it with a Conversation.
+        """
+        try:
+            response = ConversationResponse(**response_data, StartedOn=datetime.now())
+            db_session.add(response)
+            db_session.commit()
+            db_session.refresh(response)
+            return response
+        except SQLAlchemyError as e:
+            db_session.rollback()
+            print(f"Error creating ConversationResponse: {e}")
+            return None
+    
+    def update_conversation(self, db_session: Session, conversation_id: int, update_data: Dict) -> Optional[Conversation]:
+        """
+        Updates an existing Conversation with new data.
+        """
+        try:
+            conversation = db_session.query(Conversation).filter(Conversation.ConversationID == conversation_id).first()
+            if conversation:
+                for key, value in update_data.items():
+                    setattr(conversation, key, value)
+                db_session.commit()
+                db_session.refresh(conversation)
+                return conversation
+            else:
+                print(f"Conversation with ID {conversation_id} not found.")
+                return None
+        except SQLAlchemyError as e:
+            db_session.rollback()
+            print(f"Error updating Conversation: {e}")
+            return None

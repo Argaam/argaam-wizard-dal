@@ -1,5 +1,6 @@
-from .models import Base, Agent
-from .repository import AgentRepository
+from typing import Dict, Optional
+from .models import Base, Agent, Conversation, ConversationResponse
+from .repository import AgentRepository, ConversationRepository
 
 class AgentManager:
     def __init__(self, agent_name="Agent Name"):
@@ -34,3 +35,28 @@ class AgentManager:
         agent_repository = AgentRepository()
         db_session = agent_repository.get_session()
         self.agent = agent_repository.update_agent_status(db_session, agent_id, status)
+
+
+class ConversationManager:
+    def __init__(self):
+        self.conversation_repo = ConversationRepository()
+        self.db_session = self.conversation_repo.get_session()
+
+        
+    def create_conversation(self, conversation_data: Dict) -> Optional[Conversation]:
+        """
+        Creates a new conversation and returns the created conversation object.
+        """
+        return self.conversation_repo.create_conversation(self.db_session, conversation_data)
+    
+    def add_conversation_response(self, response_data: Dict) -> Optional[ConversationResponse]:
+        """
+        Adds a response to an existing conversation based on the response data provided.
+        """
+        return self.conversation_repo.create_conversation_response(self.db_session, response_data)
+    
+    def update_conversation(self, conversation_id: int, update_data: Dict) -> Optional[Conversation]:
+        """
+        Updates an existing conversation with the provided update data.
+        """
+        return self.conversation_repo.update_conversation(self.db_session, conversation_id, update_data)

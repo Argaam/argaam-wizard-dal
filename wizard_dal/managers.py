@@ -65,13 +65,14 @@ class ConversationManager:
         """
         return self.conversation_repo.update_conversation(self.db_session, conversation_id, update_data)
     
-    def get_conversation_responses_with_agents(self, conversation_id: int) -> str:
+    def get_conversation_by_id(self, conversation_id: int) -> str:
         """
-        Retrieves conversation responses along with agent details for a given conversation ID
-        and returns them in a JSON format.
+        Retrieves a conversation by its ID and returns it in a JSON format.
         """
-        responses = self.conversation_repo.get_conversation_responses_with_agents(self.db_session, conversation_id)
-        return json.dumps([model_to_dict(response["Response"]) for response in responses])
+        conversation = self.conversation_repo.get_conversation_by_id(self.db_session, conversation_id)
+        if conversation:
+            return json.dumps(model_to_dict(conversation))
+        return json.dumps({})  # Return an empty object if not found
 
     def get_conversation_response_for_agent(self, conversation_id: int, agent_id: Optional[int] = None) -> str:
         """

@@ -81,3 +81,14 @@ class ConversationManager:
         """
         responses = self.conversation_repo.get_conversation_responses_for_agent(self.db_session, conversation_id, agent_id)
         return json.dumps([response for response in responses])
+    
+    def get_active_conversations_by_user_id(self, user_id: int) -> str:
+        """
+        Retrieves active conversations for a given user ID.
+        """
+        try:
+            active_conversations = self.conversation_repo.get_active_conversations_by_user_id(self.db_session, user_id)
+            return json.dumps([conversation for conversation in active_conversations])
+        except Exception as e:
+            print(f"Error retrieving active conversations for user ID {user_id}: {e}")
+            return []

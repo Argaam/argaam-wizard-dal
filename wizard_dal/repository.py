@@ -276,6 +276,22 @@ class ConversationRepository(BaseRepository):
     def get_conversation_by_id(self, db_session: Session, conversation_id: int) -> Optional[Conversation]:
         return self.get_conversation_by_id_from_db(db_session, conversation_id)
 
+    def get_active_conversations_by_user_id(self, db_session: Session, user_id: int) -> List[Dict]:
+        """
+        Fetches active conversations for a given user ID.
+        """
+        try:
+            conversations = db_session.query(Conversation).filter(
+                Conversation.UserID == user_id,
+                Conversation.IsActive.is_(True)
+            ).all()
+
+            results = [model_to_dict(conversation) for conversation in conversations]
+            return results
+        except SQLAlchemyError as e:
+            db_session.rollback()
+            print(f"Error fetching active conversations for user ID {user_id}: {e}")
+            return []
     def get_conversation_responses_for_agent(self, db_session: Session, conversation_id: int, agent_id: Optional[int] = None) -> List[Dict]:
         """
         Fetches conversation responses for a given conversation ID, including agent details.

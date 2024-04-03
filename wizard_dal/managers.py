@@ -88,7 +88,7 @@ class ConversationManager:
         """
         try:
             active_conversations = self.conversation_repo.get_active_conversations_by_user_id(self.db_session, user_id)
-            return json.dumps([conversation for conversation in active_conversations])
+            return json.dumps([conversation for conversation in active_conversations], default=str)  # Ensure datetime and UUID are serialized
         except Exception as e:
             print(f"Error retrieving active conversations for user ID {user_id}: {e}")
-            return []
+            return '[]' 

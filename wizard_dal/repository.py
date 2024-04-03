@@ -25,13 +25,18 @@ DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, expire_on_commit=False)
 
+
 def model_to_dict(model_instance):
     """
-    Converts a SQLAlchemy model instance into a dictionary.
+    Converts a SQLAlchemy model instance into a dictionary, handling datetime objects.
     """
-    return {column.name: getattr(model_instance, column.name) for column in model_instance.__table__.columns}
-
-
+    return {
+        column.name: (
+            getattr(model_instance, column.name).isoformat() if isinstance(getattr(model_instance, column.name), datetime)
+            else getattr(model_instance, column.name)
+        )
+        for column in model_instance.__table__.columns
+    }
 T = TypeVar('T', bound=Base)
 
 class BaseRepository(Generic[T]):

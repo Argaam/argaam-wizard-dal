@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
+import uuid
 from datetime import datetime
 
 import os
@@ -28,11 +29,12 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, expi
 
 def model_to_dict(model_instance):
     """
-    Converts a SQLAlchemy model instance into a dictionary, handling datetime objects.
+    Converts a SQLAlchemy model instance into a dictionary, handling datetime and UUID objects.
     """
     return {
         column.name: (
             getattr(model_instance, column.name).isoformat() if isinstance(getattr(model_instance, column.name), datetime)
+            else str(getattr(model_instance, column.name)) if isinstance(getattr(model_instance, column.name), uuid.UUID)
             else getattr(model_instance, column.name)
         )
         for column in model_instance.__table__.columns

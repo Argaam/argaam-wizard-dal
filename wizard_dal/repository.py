@@ -267,7 +267,7 @@ class ConversationRepository(BaseRepository):
             print(f"Error updating Conversation: {e}")
             return None
     def get_conversation_by_id(self, db_session: Session, conversation_id: int) -> Optional[Conversation]:
-        return super().get_conversation_by_id_from_db(db_session, conversation_id)
+        return self.get_conversation_by_id_from_db(db_session, conversation_id)
 
     def get_conversation_responses_for_agent(self, db_session: Session, conversation_id: int, agent_id: Optional[int] = None) -> List[Dict]:
         """

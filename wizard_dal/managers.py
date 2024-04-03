@@ -80,4 +80,4 @@ class ConversationManager:
         and returns them in a JSON format.
         """
         responses = self.conversation_repo.get_conversation_responses_for_agent(self.db_session, conversation_id, agent_id)
-        return json.dumps([model_to_dict(response) for response in responses])
+        return json.dumps([response for response in responses])

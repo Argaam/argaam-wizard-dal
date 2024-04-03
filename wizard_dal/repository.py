@@ -302,7 +302,10 @@ class ConversationRepository(BaseRepository):
             results = []
             for response, agent_name, agent_active, show_response in responses_with_agents:
                 result = {
-                    "Response": model_to_dict(response),  # Assuming you have a function to serialize the model
+                    "ResponseID": model_to_dict(response)['ResponseID'], 
+                    "ResponseBody": model_to_dict(response)['ResponseBody'], 
+                    "ConversationID": model_to_dict(response)['ConversationID'], 
+                    "CompletedOn": model_to_dict(response)['CompletedOn'], 
                     "AgentName": agent_name,
                     "AgentActive": agent_active,
                     "ShowResponse": show_response

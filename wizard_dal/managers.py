@@ -1,6 +1,7 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from .models import Base, Agent, Conversation, ConversationResponse
-from .repository import AgentRepository, ConversationRepository
+from .repository import AgentRepository, ConversationRepository, model_to_dict
+import json
 
 class AgentManager:
     def __init__(self, agent_name="Agent Name"):
@@ -46,7 +47,6 @@ class ConversationManager:
         self.conversation_repo = ConversationRepository()
         self.db_session = self.conversation_repo.get_session()
 
-        
     def create_conversation(self, conversation_data: Dict) -> Optional[Conversation]:
         """
         Creates a new conversation and returns the created conversation object.
@@ -64,3 +64,19 @@ class ConversationManager:
         Updates an existing conversation with the provided update data.
         """
         return self.conversation_repo.update_conversation(self.db_session, conversation_id, update_data)
+    
+    def get_conversation_responses_with_agents(self, conversation_id: int) -> str:
+        """
+        Retrieves conversation responses along with agent details for a given conversation ID
+        and returns them in a JSON format.
+        """
+        responses = self.conversation_repo.get_conversation_responses_with_agents(self.db_session, conversation_id)
+        return json.dumps([model_to_dict(response["Response"]) for response in responses])
+
+    def get_conversation_response_for_agent(self, conversation_id: int, agent_id: Optional[int] = None) -> str:
+        """
+        Retrieves conversation responses for a given conversation ID and agent ID,
+        and returns them in a JSON format.
+        """
+        responses = self.conversation_repo.get_conversation_responses_for_agent(self.db_session, conversation_id, agent_id)
+        return json.dumps([model_to_dict(response) for response in responses])

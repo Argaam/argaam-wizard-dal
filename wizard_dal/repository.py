@@ -25,6 +25,12 @@ DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, expire_on_commit=False)
 
+def model_to_dict(model_instance):
+    """
+    Converts a SQLAlchemy model instance into a dictionary.
+    """
+    return {column.name: getattr(model_instance, column.name) for column in model_instance.__table__.columns}
+
 
 T = TypeVar('T', bound=Base)
 
@@ -252,3 +258,43 @@ class ConversationRepository(BaseRepository):
             db_session.rollback()
             print(f"Error updating Conversation: {e}")
             return None
+    def get_conversation_by_id(self, db_session: Session, conversation_id: int) -> Optional[Conversation]:
+        return super().get_by_id(db_session, conversation_id)
+
+    def get_conversation_responses_for_agent(self, db_session: Session, conversation_id: int, agent_id: Optional[int] = None) -> List[Dict]:
+        """
+        Fetches conversation responses for a given conversation ID, including agent details.
+        Filters by agent ID if provided.
+        """
+        try:
+            query = db_session.query(
+                ConversationResponse,
+                Agent.AgentName,
+                Agent.IsActive.label('AgentActive'),
+                Agent.ShowResponse
+            ).join(
+                Agent, ConversationResponse.AgentID == Agent.AgentID
+            ).filter(
+                ConversationResponse.ConversationID == conversation_id
+            )
+
+            # Apply agent_id filter if provided
+            if agent_id is not None:
+                query = query.filter(Agent.AgentID == agent_id)
+
+            responses_with_agents = query.all()
+
+            results = []
+            for response, agent_name, agent_active, show_response in responses_with_agents:
+                result = {
+                    "Response": model_to_dict(response),  # Assuming you have a function to serialize the model
+                    "AgentName": agent_name,
+                    "AgentActive": agent_active,
+                    "ShowResponse": show_response
+                }
+                results.append(result)
+            return results
+        except SQLAlchemyError as e:
+            db_session.rollback()
+            print(f"Error fetching conversation responses for agent: {e}")
+            return []

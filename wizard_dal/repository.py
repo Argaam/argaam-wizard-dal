@@ -208,7 +208,15 @@ class AgentRepository(BaseRepository):
 class ConversationRepository(BaseRepository):
     def __init__(self):
         super().__init__(Conversation)
-    
+
+    def get_conversation_by_id_from_db(self, db_session: Session, id: int) -> Conversation:
+        try:
+            return db_session.query(self.model).filter(self.model.ConversationID == id).first()
+        except SQLAlchemyError as e:
+            db_session.rollback()
+            # Log the error as appropriate
+            print(f"Error retrieving {self.model.__name__} by ConversationID: {e}")
+            return None
     def create_conversation(self, db_session: Session, conversation_data: Dict) -> Optional[Conversation]:
         """
         Creates a new Conversation object and stores it in the database.
@@ -259,7 +267,7 @@ class ConversationRepository(BaseRepository):
             print(f"Error updating Conversation: {e}")
             return None
     def get_conversation_by_id(self, db_session: Session, conversation_id: int) -> Optional[Conversation]:
-        return super().get_by_id(db_session, conversation_id)
+        return super().get_conversation_by_id_from_db(db_session, conversation_id)
 
     def get_conversation_responses_for_agent(self, db_session: Session, conversation_id: int, agent_id: Optional[int] = None) -> List[Dict]:
         """

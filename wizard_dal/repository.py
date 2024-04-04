@@ -276,9 +276,9 @@ class ConversationRepository(BaseRepository):
     def get_conversation_by_id(self, db_session: Session, conversation_id: int) -> Optional[Conversation]:
         return self.get_conversation_by_id_from_db(db_session, conversation_id)
 
-    def get_active_conversations_by_user_id(self, db_session: Session, user_id: int) -> List[Dict]:
+    def get_active_conversations_with_responses_by_user_id(self, db_session: Session, user_id: int) -> List[Dict]:
         """
-        Fetches active conversations for a given user ID.
+        Fetches active conversations for a given user ID, including their responses.
         """
         try:
             conversations = db_session.query(Conversation).filter(
@@ -286,11 +286,29 @@ class ConversationRepository(BaseRepository):
                 Conversation.IsActive == True
             ).all()
 
-            results = [model_to_dict(conversation) for conversation in conversations]
+            results = []
+            for conversation in conversations:
+                # Convert the conversation model to a dictionary
+                conversation_dict = model_to_dict(conversation)
+                
+                # Fetch responses for the current conversation
+                responses = db_session.query(ConversationResponse).filter(
+                    ConversationResponse.ConversationID == conversation.ConversationID
+                ).all()
+                
+                # Convert each response model to a dictionary
+                responses_dict = [model_to_dict(response) for response in responses]
+                
+                # Append the conversation with its responses to the results list
+                results.append({
+                    "Conversation": conversation_dict,
+                    "Responses": responses_dict
+                })
+                
             return results
         except SQLAlchemyError as e:
             db_session.rollback()
-            print(f"Error fetching active conversations for user ID {user_id}: {e}")
+            print(f"Error fetching active conversations with responses for user ID {user_id}: {e}")
             return []
     def get_conversation_responses_for_agent(self, db_session: Session, conversation_id: int, agent_id: Optional[int] = None) -> List[Dict]:
         """

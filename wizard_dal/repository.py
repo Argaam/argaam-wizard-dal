@@ -283,7 +283,7 @@ class ConversationRepository(BaseRepository):
         try:
             conversations = db_session.query(Conversation).filter(
                 Conversation.UserID == user_id,
-                Conversation.IsActive.is_(True)
+                Conversation.IsActive == True
             ).all()
 
             results = [model_to_dict(conversation) for conversation in conversations]

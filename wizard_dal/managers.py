@@ -82,12 +82,12 @@ class ConversationManager:
         responses = self.conversation_repo.get_conversation_responses_for_agent(self.db_session, conversation_id, agent_id)
         return json.dumps([response for response in responses])
     
-    def get_active_conversations_with_responses_by_user_id(self, user_id: int) -> str:
+    def get_active_conversations_with_responses_by_user_id(self, user_id: int,  group_id: Optional[int] = None) -> str:
         """
         Retrieves active conversations for a given user ID.
         """
         try:
-            active_conversations = self.conversation_repo.get_active_conversations_with_responses_by_user_id(self.db_session, user_id)
+            active_conversations = self.conversation_repo.get_active_conversations_with_responses_by_user_id(self.db_session, user_id,  group_id)
             return json.dumps([conversation for conversation in active_conversations], default=str)  # Ensure datetime and UUID are serialized
         except Exception as e:
             print(f"Error retrieving active conversations for user ID {user_id}: {e}")

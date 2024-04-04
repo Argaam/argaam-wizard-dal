@@ -276,15 +276,31 @@ class ConversationRepository(BaseRepository):
     def get_conversation_by_id(self, db_session: Session, conversation_id: int) -> Optional[Conversation]:
         return self.get_conversation_by_id_from_db(db_session, conversation_id)
 
-    def get_active_conversations_with_responses_by_user_id(self, db_session: Session, user_id: int) -> List[Dict]:
+    def get_active_conversations_with_responses_by_user_id(self, db_session: Session, user_id: int, group_id: Optional[int] = None) -> List[Dict]:
         """
-        Fetches active conversations for a given user ID, including their responses.
+        Fetches active conversations for a given user ID, including their responses,
+        optionally filtered by GroupID.
+        
+        Args:
+            db_session (Session): The database session.
+            user_id (int): The user ID to filter conversations.
+            group_id (Optional[int], optional): The group ID to optionally filter conversations. Defaults to None.
+            
+        Returns:
+            List[Dict]: A list of dictionaries where each dictionary includes a conversation and its responses.
         """
         try:
-            conversations = db_session.query(Conversation).filter(
+            # Start with a base query for active conversations by user ID
+            query = db_session.query(Conversation).filter(
                 Conversation.UserID == user_id,
-                Conversation.IsActive == True
-            ).all()
+                Conversation.IsActive == 1
+            )
+            
+            # Apply an optional filter for GroupID if provided
+            if group_id is not None:
+                query = query.filter(Conversation.GroupID == group_id)
+
+            conversations = query.all()
 
             results = []
             for conversation in conversations:

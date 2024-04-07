@@ -248,7 +248,7 @@ class ConversationRepository(BaseRepository):
             db_session.add(response)
             db_session.commit()
             db_session.refresh(response)
-            return response
+            return model_to_dict(response)
         except SQLAlchemyError as e:
             db_session.rollback()
             print(f"Error creating ConversationResponse: {e}")
@@ -265,7 +265,7 @@ class ConversationRepository(BaseRepository):
                     setattr(conversation, key, value)
                 db_session.commit()
                 db_session.refresh(conversation)
-                return conversation
+                return  model_to_dict(conversation)
             else:
                 print(f"Conversation with ID {conversation_id} not found.")
                 return None

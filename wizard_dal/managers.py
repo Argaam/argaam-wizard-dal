@@ -57,13 +57,15 @@ class ConversationManager:
         """
         Adds a response to an existing conversation based on the response data provided.
         """
-        return self.conversation_repo.create_conversation_response(self.db_session, response_data)
+        convers_resp = self.conversation_repo.create_conversation_response(self.db_session, response_data)
+        return json.dumps(convers_resp)
     
     def update_conversation(self, conversation_id: int, update_data: Dict) -> Optional[Conversation]:
         """
         Updates an existing conversation with the provided update data.
         """
-        return self.conversation_repo.update_conversation(self.db_session, conversation_id, update_data)
+        conversation = self.conversation_repo.update_conversation(self.db_session, conversation_id, update_data)
+        return json.dumps(conversation)
     
     def get_conversation_by_id(self, conversation_id: int) -> str:
         """

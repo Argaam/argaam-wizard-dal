@@ -19,8 +19,7 @@ username = os.getenv('SQL_USERNAME')
 password = os.getenv('SQL_PASSWORD')
 driver = 'ODBC Driver 17 for SQL Server'
 
-
-DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver={driver}"
+DATABASE_URL = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver={driver}&charset=utf-8&Trusted_Connection=yes"
 
 
 engine = create_engine(DATABASE_URL)

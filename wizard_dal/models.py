@@ -28,19 +28,19 @@ class Agent(Base):
     __tablename__ = 'Agents'
 
     AgentID = Column(Integer, primary_key=True)
-    AgentName = Column(String(256), nullable=False)
+    AgentName = Column(Unicode(256), nullable=False)
     AgentPath = Column(String(512), nullable=False)
     AgentClassName = Column(String(128), nullable=False)
-    Description = Column(String(512))
+    Description = Column(Unicode(512))
     IsActive = Column(Boolean, nullable=False)
     RedisChannel = Column(String(64), nullable=False)
-    Configurations = Column(String(2048))
+    Configurations = Column(Unicode(2048))
     ShowResponse = Column(Boolean, nullable=False)
     ResponseOrder = Column(Integer, nullable=False)
-    TriggerOn = Column(String(2048))
-    OnError = Column(String(2048))
-    OnSuccess = Column(String(10))
-    Status = Column(String(256), nullable=True)
+    TriggerOn = Column(Unicode(2048))
+    OnError = Column(Unicode(2048))
+    OnSuccess = Column(Unicode(10))
+    Status = Column(Unicode(256), nullable=True)
     StatusChangedOn = Column(DateTime, nullable=True)
     
     # Relationships
@@ -50,7 +50,7 @@ class ChatGroup(Base):
     __tablename__ = 'ChatGroups'
 
     GroupID = Column(Integer, primary_key=True)
-    GroupName = Column(String(255), nullable=False)
+    GroupName = Column(Unicode(255), nullable=False)
     UserID = Column(Integer, ForeignKey('Users.UserID'))
     CreatedOn = Column(DateTime, nullable=False)
     
@@ -63,8 +63,8 @@ class User(Base):
     __tablename__ = 'Users'
 
     UserID = Column(Integer, primary_key=True)
-    EmailAddress = Column(String(255), nullable=False)
-    DisplayName = Column(String(512))
+    EmailAddress = Column(Unicode(255), nullable=False)
+    DisplayName = Column(Unicode(512))
     
     # Relationships
     chat_groups = relationship("ChatGroup", back_populates="user")
@@ -77,13 +77,13 @@ class Conversation(Base):
     __tablename__ = 'Conversations'
 
     ConversationID = Column(Integer, primary_key=True)
-    UserPrompt = Column(String(1024), nullable=False)
+    UserPrompt = Column(Unicode(1024), nullable=False)
     CreatedOn = Column(DateTime, nullable=False)
     IsProcessed = Column(Boolean, nullable=False)
     PercentCompleted = Column(Integer, default=0, nullable=False)
     UserID = Column(Integer, ForeignKey('Users.UserID'), nullable=False)
     LanguageID = Column(Integer, nullable=False)
-    SelectedCompany = Column(String(512))
+    SelectedCompany = Column(Unicode(512))
     GroupID = Column(Integer, ForeignKey('ChatGroups.GroupID'), nullable=False)
     GUID = Column(UNIQUEIDENTIFIER, nullable=False)
     IsActive = Column(Boolean, nullable=False)
@@ -115,7 +115,7 @@ class ConversationResponse(Base):
     __tablename__ = 'ConversationResponses'
 
     ResponseID = Column(Integer, primary_key=True)
-    ResponseBody = Column(String(1024))
+    ResponseBody = Column(Unicode(1024))
     AgentID = Column(Integer, ForeignKey('Agents.AgentID'), nullable=False)
     ConversationID = Column(Integer, ForeignKey('Conversations.ConversationID'), nullable=False)
     StartedOn = Column(DateTime, nullable=False)
@@ -130,8 +130,8 @@ class Feedback(Base):
     __tablename__ = 'Feedbacks'
 
     FeedbackID = Column(Integer, primary_key=True)
-    FeedbackText = Column(String(1800))
-    Emotions = Column(String(64))
+    FeedbackText = Column(Unicode(1800))
+    Emotions = Column(Unicode(64))
     UserID = Column(Integer, ForeignKey('Users.UserID'), nullable=False)
     CreatedOn = Column(DateTime, nullable=False)
     ResponseID = Column(Integer, ForeignKey('ConversationResponses.ResponseID'), nullable=False)
@@ -145,10 +145,10 @@ class FinancialRatioField(Base):
     __tablename__ = 'fr_fields'
 
     fr_id = Column(String(255), primary_key=True)
-    financial_ratio = Column(String(255))
-    other_names = Column(String(255))
-    financial_ratio_ar = Column(String(255))
-    other_names_ar = Column(String(255))
+    financial_ratio = Column(Unicode(255))
+    other_names = Column(Unicode(255))
+    financial_ratio_ar = Column(Unicode(255))
+    other_names_ar = Column(Unicode(255))
 
 
 class FinancialStatementField(Base):
@@ -156,20 +156,20 @@ class FinancialStatementField(Base):
 
     ftf_if = Column(String(255), primary_key=True)
     fsf_id = Column(String(255))
-    fs_field_name = Column(String(255))
-    alternative_names = Column(String(255))
-    fs_field_name_ar = Column(String(255))
-    alternative_names_ar = Column(String(255))
+    fs_field_name = Column(Unicode(255))
+    alternative_names = Column(Unicode(255))
+    fs_field_name_ar = Column(Unicode(255))
+    alternative_names_ar = Column(Unicode(255))
 
 
 class UserContext(Base):
     __tablename__ = 'UserContext'
 
     ContextID = Column(Integer, primary_key=True)
-    ContextText = Column(String(2048), nullable=False)
+    ContextText = Column(Unicode(2048), nullable=False)
     CreatedOn = Column(DateTime, nullable=False)
     UserID = Column(Integer, ForeignKey('Users.UserID'), nullable=False)
-    DisabledAgents = Column(String(256), nullable=False)
+    DisabledAgents = Column(Unicode(256), nullable=False)
     MultifacetedAnalysis = Column(Boolean, default=True, nullable=False)
     MA_MaxCount = Column(Integer)
 

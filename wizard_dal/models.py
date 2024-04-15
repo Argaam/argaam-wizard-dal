@@ -115,7 +115,7 @@ class ConversationResponse(Base):
     __tablename__ = 'ConversationResponses'
 
     ResponseID = Column(Integer, primary_key=True)
-    ResponseBody = Column(Unicode(1024))
+    ResponseBody = Column(UnicodeText, nullable=False)
     AgentID = Column(Integer, ForeignKey('Agents.AgentID'), nullable=False)
     ConversationID = Column(Integer, ForeignKey('Conversations.ConversationID'), nullable=False)
     StartedOn = Column(DateTime, nullable=False)
